@@ -2,7 +2,7 @@ module App exposing (..)
 
 import Html exposing (Html)
 import Html.Attributes
-import Time exposing (Time)
+import Time
 import Process
 import Task
 import RemoteData exposing (WebData, RemoteData(..))
@@ -14,33 +14,47 @@ type alias Post =
     }
 
 
-type Animation
-    = Blink
-    | Fade
-
-
 type alias Model =
     { posts : WebData (List Post) }
 
 
-init : Time -> ( Model, Cmd Msg )
-init delay =
-    ( Model Loading
-    , getPosts ReceivePosts delay
-    )
+type Animation
+    = Blink
+    | Fade
 
 
 type Msg
     = ReceivePosts (WebData (List Post))
 
 
+init : ( Model, Cmd Msg )
+init =
+    Model Loading
+        |> withCmd getPosts
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ReceivePosts newPosts ->
-            ( { model | posts = newPosts }
-            , Cmd.none
-            )
+            model
+                |> setPosts newPosts
+                |> withoutCmd
+
+
+setPosts : WebData (List Post) -> Model -> Model
+setPosts newPosts model =
+    { model | posts = newPosts }
+
+
+withCmd : Cmd Msg -> Model -> ( Model, Cmd Msg )
+withCmd =
+    flip (,)
+
+
+withoutCmd : Model -> ( Model, Cmd Msg )
+withoutCmd =
+    withCmd Cmd.none
 
 
 view : Model -> Html Msg
@@ -68,8 +82,8 @@ viewPosts postsData =
             Html.text <| toString error
 
 
-layoutPost : Animation -> Html Msg -> Html Msg -> Html Msg
-layoutPost animation header description =
+viewPostLayout : Animation -> Html Msg -> Html Msg -> Html Msg
+viewPostLayout animation header description =
     let
         animationClass =
             case animation of
@@ -104,24 +118,16 @@ spacer width =
             []
 
 
-withBlink : List (Html Msg) -> Html Msg
-withBlink =
-    Html.span
-        [ Html.Attributes.class "blink" ]
-
-
-withFade : List (Html Msg) -> Html Msg
-withFade =
-    Html.span
-        [ Html.Attributes.class "fade" ]
-
-
 viewPost : Post -> Html Msg
 viewPost { header, description } =
-    layoutPost
-        Blink
-        (Html.text header)
-        (Html.text description)
+    let
+        header_ =
+            Html.text header
+
+        description_ =
+            Html.text description
+    in
+        viewPostLayout Blink header_ description_
 
 
 viewPostSkeleton : Html Msg
@@ -137,10 +143,7 @@ viewPostSkeleton =
                 , spacer 80
                 ]
     in
-        layoutPost
-            Fade
-            header
-            description
+        viewPostLayout Fade header description
 
 
 subscriptions : Model -> Sub Msg
@@ -148,8 +151,8 @@ subscriptions model =
     Sub.none
 
 
-getPosts : (WebData (List Post) -> Msg) -> Time -> Cmd Msg
-getPosts msg delay =
+getPosts : Cmd Msg
+getPosts =
     let
         posts =
             [ Post
@@ -176,7 +179,7 @@ getPosts msg delay =
         response =
             Success posts
     in
-        delay
+        Time.second
             |> Process.sleep
             |> Task.andThen (always <| Task.succeed response)
-            |> Task.perform msg
+            |> Task.perform ReceivePosts
