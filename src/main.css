@@ -1,0 +1,58 @@
+body {
+  font-family: 'Fira Sans', sans-serif;
+  font-size: 16px;
+  color: #444;
+
+  width: 300px;
+  padding: 0;
+  margin: 20px auto;
+}
+
+.post {
+  padding: 20px;
+  border: 1px solid #eee;
+  margin-top: -1px;
+}
+
+.post h2 {
+  margin: 0;
+  margin-bottom: 5px;
+  padding: 0;
+}
+
+.post p {
+  margin: 0;
+}
+
+.spacer {
+  display: inline-block;
+  background-color: #eee;
+  height: 0.8em;
+  width: 100%;
+}
+
+.blink,
+.fade {
+  animation-name: fade;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-out;
+}
+
+.blink {
+  animation-duration: 200ms;
+}
+
+.fade {
+  animation-duration: 300ms;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
