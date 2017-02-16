@@ -1,33 +1,136 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Fira Sans', sans-serif;
   font-size: 16px;
   color: #444;
 
-  width: 300px;
+  max-width: 768px;
   padding: 0;
-  margin: 20px auto;
+  margin: 0 auto;
+
+  overflow: scroll;
 }
 
-.post {
+.search {
+  position: fixed;
+  width: 100%;
+  max-width: 768px;
+  top: 0;
+  display: flex;
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-top: none;
+
+  box-shadow: 0 0 10px -5px rgba(0,0,0,.0);;
+  transition: box-shadow 300ms;
+}
+
+.search--shadow {
+  box-shadow: 0 5px 10px -5px rgba(0,0,0,.3);
+}
+
+.search__input {
+  width: 100%;
+  font-size: 1.5em;
+  padding: 20px;
+  padding-right: 70px;
+  border: none;
+}
+
+.search__button {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+
+  animation-name: blink;
+  animation-duration: 500ms;
+  animation-iteration-count: 1;
+
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  right: 1px;
+}
+
+.search__button:hover {
+  background-color: #eee;
+}
+
+.search__button > svg {
+  width: 30px;
+  height: 30px;
+}
+
+.package {
   padding: 20px;
   border: 1px solid #eee;
   margin-top: -1px;
+  display: flex;
 }
 
-.post h2 {
+.package:first-child {
+  margin-top: 68px;
+}
+
+.package a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.package a:hover {
+  text-decoration: underline;
+}
+
+.package__image {
+  padding-right: 20px;
+  display: flex;
+}
+
+.package__image * {
+  width: 80px;
+  height: 80px;
+  align-self: center;
+}
+
+.package__info {
+  width: 100%;
+}
+
+.package__header {
   margin: 0;
-  margin-bottom: 5px;
   padding: 0;
+  display: flex;
+  justify-content: space-between;
 }
 
-.post p {
+.package__author {
+  margin: 5px 0 8px;
+  font-weight: normal;
+  color: #aaa;
+}
+
+.package__summary {
   margin: 0;
 }
 
+.package__version {
+  font-family: 'Fira Mono', monospace;
+  font-size: .7em;
+  color: #888;
+}
+
+.spacer-bg,
 .spacer {
   display: inline-block;
   background-color: #eee;
-  height: 0.8em;
+}
+
+.spacer {
+  height: .8em;
   width: 100%;
 }
 
