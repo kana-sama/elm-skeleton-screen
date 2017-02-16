@@ -496,8 +496,9 @@ decodePackages =
 getPackages : Cmd Msg
 getPackages =
     let
+        -- "https://crossorigin.me/"
         proxy =
-            "https://crossorigin.me/"
+            "https://cors-anywhere.herokuapp.com/"
 
         url =
             "http://package.elm-lang.org/all-packages"
